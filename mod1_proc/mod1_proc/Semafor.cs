@@ -15,6 +15,12 @@ namespace mod1_proc
             s = i;
             queue = new LinkedList<Process>();
         }
+
+        public int getSemStat()
+        {
+            return s;
+        }
+
         public void op_p (ref Process p)
         {
             if (s > 0)

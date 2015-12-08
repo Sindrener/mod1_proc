@@ -13,7 +13,7 @@ namespace mod1_proc
         public List<Node> childrens;
 
 
-        public Node(ref Node p, ref Process proc, ProcessTree tree)
+        public Node(ref Node p, ref Process proc, ref ProcessTree tree)
         {
             this.parent = p;
             this.p = proc;
