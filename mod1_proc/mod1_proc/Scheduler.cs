@@ -161,6 +161,7 @@ namespace mod1_proc
 
         private void moveQueue()
         {
+            process_list[current_priority].First().saveProcessorState();
             Console.WriteLine("[PLANISTA] Przejscie do nastepnego procesu w kolejce.");
             while (process_list[current_priority].First().getState() == 1)
             {
@@ -178,6 +179,7 @@ namespace mod1_proc
                 last_n.RemoveFirst();
 
             }
+            process_list[current_priority].First().loadProcessorState();
         }
         public void updatePriority()
         {
