@@ -17,12 +17,14 @@ namespace mod1_proc
         }
         public void op_p (ref Process p)
         {
-            if(s > 0)
+            if (s > 0)
             {
                 p.ready();
             }
             else
             {
+                Console.WriteLine("[SEMAFOR] Operacja P zatrzymanie procesu: {0}", p.getPID());
+                Console.WriteLine("[SEMAFOR] Wartosc semafora: {0}", this.s);
                 p.wait();
                 queue.AddLast(p);
             }

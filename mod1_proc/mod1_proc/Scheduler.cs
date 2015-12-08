@@ -119,10 +119,11 @@ namespace mod1_proc
             bool hunger = false;
             SortedList<int, int> proc_wait_copy = new SortedList<int, int>(this.processes_waiting);
 
+
             foreach (KeyValuePair<int, int> pair in proc_wait_copy)
             {
                 Process p = this.findProcess(pair.Key);
-                if (p.getPID() != this.getCurrentRunning().getPID() && p.getPriority() != this.current_priority && p.getPriority() != 0)
+                if (p.getPID() != this.getCurrentRunning().getPID() && p.getPriority() != this.current_priority && p.getPriority() != 0 && !process_list[4].Contains(p) && p.getState() != 1)
                 {
                    processes_waiting[pair.Key] =  pair.Value +1;
                     if(processes_waiting[pair.Key] > 10)
@@ -146,7 +147,7 @@ namespace mod1_proc
                 n = 0;
             }
             n++;
-            if(n >+ 3)
+            if(n >+ 3 || this.getCurrentRunning().getState() == 1)
             {
                 moveQueue();
                 n = 1;
@@ -163,21 +164,33 @@ namespace mod1_proc
         {
             process_list[current_priority].First().saveProcessorState();
             Console.WriteLine("[PLANISTA] Przejscie do nastepnego procesu w kolejce.");
-            while (process_list[current_priority].First().getState() == 1)
+            if (process_list[current_priority].First().getState() == 1)
             {
-                Console.WriteLine("[PLANISTA] Omijanie procesu w stanie waiting.");
-                process_list[current_priority].AddLast(process_list[current_priority].First());
-                process_list[current_priority].RemoveFirst();
+                while (process_list[current_priority].First().getState() == 1)
+                {
+                    Console.WriteLine("[PLANISTA] Omijanie procesu w stanie waiting.");
+                    process_list[process_list[current_priority].First().getPriority()].AddLast(process_list[current_priority].First());
+                    process_list[current_priority].RemoveFirst();
+                    if (process_list[current_priority].Count() <= 0)
+                    {
+                        current_priority = this.getHighestPriority();
+                        n = last_n.First();
+                        last_n.RemoveFirst();
+                    }
+                }
             }
-            Console.WriteLine("[PLANISTA] Przesuniecie kolejki.");
-            process_list[process_list[current_priority].First().getPriority()].AddLast(process_list[current_priority].First());
-            process_list[current_priority].RemoveFirst();
-            if(process_list[current_priority].Count() <= 0)
+            else
             {
-                current_priority = this.getHighestPriority();
-                n = last_n.First();
-                last_n.RemoveFirst();
+                Console.WriteLine("[PLANISTA] Przesuniecie kolejki.");
+                process_list[process_list[current_priority].First().getPriority()].AddLast(process_list[current_priority].First());
+                process_list[current_priority].RemoveFirst();
+                if (process_list[current_priority].Count() <= 0)
+                {
+                    current_priority = this.getHighestPriority();
+                    n = last_n.First();
+                    last_n.RemoveFirst();
 
+                }
             }
             process_list[current_priority].First().loadProcessorState();
         }
