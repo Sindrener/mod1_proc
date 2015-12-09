@@ -154,6 +154,7 @@ namespace mod1_proc
             }
             Console.WriteLine("[PLANISTA] Wykonywanie nastepnego cyklu.");
             Console.WriteLine("[PLANISTA] Aktualnie wykonywany proces {0}, kwant czasu = {1}", this.getCurrentRunning().getPID(), n);
+            this.getCurrentRunning().run();
         }
         public Process getCurrentRunning()
         {
@@ -163,6 +164,7 @@ namespace mod1_proc
         private void moveQueue()
         {
             process_list[current_priority].First().saveProcessorState();
+          
             Console.WriteLine("[PLANISTA] Przejscie do nastepnego procesu w kolejce.");
             if (process_list[current_priority].First().getState() == 1)
             {
@@ -182,6 +184,7 @@ namespace mod1_proc
             else
             {
                 Console.WriteLine("[PLANISTA] Przesuniecie kolejki.");
+                process_list[current_priority].First().ready();
                 process_list[process_list[current_priority].First().getPriority()].AddLast(process_list[current_priority].First());
                 process_list[current_priority].RemoveFirst();
                 if (process_list[current_priority].Count() <= 0)
@@ -189,7 +192,6 @@ namespace mod1_proc
                     current_priority = this.getHighestPriority();
                     n = last_n.First();
                     last_n.RemoveFirst();
-
                 }
             }
             process_list[current_priority].First().loadProcessorState();

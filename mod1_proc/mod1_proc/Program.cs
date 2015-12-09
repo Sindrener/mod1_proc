@@ -18,11 +18,13 @@ namespace mod1_proc
             Process nadzorca = new Process(0, 0, 0, ref proc);
 
             Process a = new Process(12, 120, 3, ref proc);
-         //   Process b = new Process(13, 10, 2, ref proc);
+            a.ready();
+            //   Process b = new Process(13, 10, 2, ref proc);
             Process c = new Process(18, 10, 2, ref proc);
+            c.ready();
             Process d = new Process(20, 50, 1, ref proc);
-       //     Process e = new Process(16, 15, 1, ref proc);
-
+            //     Process e = new Process(16, 15, 1, ref proc);
+            d.ready();
             planista.addProcess(ref nadzorca);
             planista.addProcess(ref a);
          //   planista.addProcess(ref b);
@@ -35,7 +37,6 @@ namespace mod1_proc
                 planista.nextTick();
                 inter.runProcess();
                 cmd = Console.ReadLine();
-
             }
         }
     }

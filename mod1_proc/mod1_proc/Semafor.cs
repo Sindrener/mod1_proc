@@ -18,6 +18,7 @@ namespace mod1_proc
 
         public int getSemStat()
         {
+            Console.WriteLine("[SEMAFOR] Wartosc semafora: {0}", this.s);
             return s;
         }
 
@@ -25,12 +26,13 @@ namespace mod1_proc
         {
             if (s > 0)
             {
+                Console.WriteLine("[SEMAFOR] Semafor jest pusty, przepuszczanie procesu: {0}", p.getPID());
                 p.ready();
             }
             else
             {
                 Console.WriteLine("[SEMAFOR] Operacja P zatrzymanie procesu: {0}", p.getPID());
-                Console.WriteLine("[SEMAFOR] Wartosc semafora: {0}", this.s);
+
                 p.wait();
                 queue.AddLast(p);
             }
@@ -46,6 +48,7 @@ namespace mod1_proc
             }
             else
             {
+                Console.WriteLine("[SEMAFOR] Operacja V uruchamianie procesu: {0}", queue.First().getPID());
                 queue.First().ready();
                 queue.RemoveFirst();
             }

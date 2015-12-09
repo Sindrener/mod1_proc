@@ -9,7 +9,7 @@ namespace mod1_proc
     class Process
     {
         private Processor p;
-        private int PID;
+        private int PID; 
         private string pname;
         private short ip;
         private short priority;
