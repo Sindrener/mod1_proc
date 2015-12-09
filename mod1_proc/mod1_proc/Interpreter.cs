@@ -9,12 +9,10 @@ namespace mod1_proc
     class Interpreter
     {
         private Scheduler planista;
-        private Semafor sem;
 
-        public Interpreter(ref Scheduler p, ref Semafor s)
+        public Interpreter(ref Scheduler p)
         {
             planista = p;
-            sem = s;
         }
         public void runProcess()
         {
@@ -24,26 +22,9 @@ namespace mod1_proc
             {
                 Process p = planista.getCurrentRunning();
                 short ip = p.getIP();
-                ip -= 1;
+                ip += 1;
                 Console.WriteLine("[INTERPRETER] IP wynosi : {0}", ip);
-                if(p.getPID() == 20)
-                {
-                    sem.op_p(ref p);
-                }
-                if(p.getPID() == 18)
-                {
-                    sem.op_p(ref p);
-                }
-                if(ip%5 == 0)
-                {
-                    sem.op_v();
-                }
                 p.setIP(ip);
-                if (ip <= 0)
-                {
-                    planista.removeProcess(p);
-                    planista.updatePriority();
-                }
             }
         }
     }

@@ -22,7 +22,7 @@ namespace mod1_proc
             return s;
         }
 
-        public void op_p (ref Process p)
+        public void op_p (Process p)
         {
             if (s > 0)
             {

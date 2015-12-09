@@ -28,6 +28,11 @@ namespace mod1_proc
             Console.WriteLine("[PLANISTA] Planista zainicjalizowany pomyslnie.)");
         }
 
+        public short getCurrentPriority()
+        {
+            return current_priority;
+        }
+
         public int getProcessCount()
         {
             int n = 0;
@@ -45,8 +50,10 @@ namespace mod1_proc
             process_list[p.getPriority()].Remove(p);
             if(this.getHighestPriority() < current_priority)
             {
-                    n = 0;
+                n = 0;
+                current_priority = this.getHighestPriority();
             }
+            process_list[current_priority].First().loadProcessorState();
             Console.WriteLine("[PLANISTA] Usuniecie procesu {0}.", p.getPID());
 ;        }
         public void removeProcess(int pid)
@@ -54,10 +61,25 @@ namespace mod1_proc
             Process p = findProcess(pid);
             removeProcess(p);
         }
-        public void removeProcess(string p_name)
+
+        public void printProcessList()
         {
-            Process p = findProcess(p_name);
-            removeProcess(p);
+            for (int i = 0; i < 8; i++)
+            {
+                Console.WriteLine("Priorytet: {0}", i);
+                foreach (Process p in process_list[i])
+                {
+                    Console.WriteLine("[ PID: {0} Stan: {1} ] ", p.getPID(), p.getState());
+                }
+            }
+        }
+
+        public void printWaitingList()
+        {
+            foreach (KeyValuePair<int, int> key in processes_waiting)
+            {
+                Console.WriteLine("[ PID: {0} Licznik: {1}", key.Key, key.Value);
+            }
         }
 
         public Process findProcess(int PID)
@@ -74,20 +96,6 @@ namespace mod1_proc
             }
             return null;
         }
-        public Process findProcess (string p_name)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                foreach (Process p in process_list[i])
-                {
-                    if (p.getPName() == p_name)
-                    {
-                        return p;
-                    }
-                }
-            }
-            return null;
-        }
 
         public void addProcess(ref Process p)
         {
@@ -95,10 +103,12 @@ namespace mod1_proc
             process_list[p.getPriority()].AddLast(p);
             if(this.getHighestPriority() > current_priority)
             {
+                this.getCurrentRunning().saveProcessorState();
                 n = 0;
                 current_priority = this.getHighestPriority();
+                this.getCurrentRunning().loadProcessorState();
             }
-            Console.WriteLine("[PLANISTA] Dodano proces {0}", p.getPName());
+            Console.WriteLine("[PLANISTA] Dodano proces {0}", p.getPID());
         }
         
 
@@ -109,8 +119,10 @@ namespace mod1_proc
             SortedList<int, int> proc_wait_copy = new SortedList<int, int>(this.processes_waiting);
             if (this.current_priority < this.getHighestPriority())
             {
+                this.getCurrentRunning().saveProcessorState();
                 n = 0;
                 current_priority = this.getHighestPriority();
+                this.getCurrentRunning().loadProcessorState();
             }
             foreach (KeyValuePair<int, int> pair in proc_wait_copy)
             {

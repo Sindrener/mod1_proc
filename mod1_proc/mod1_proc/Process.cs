@@ -10,7 +10,6 @@ namespace mod1_proc
     {
         private Processor p;
         private int PID; 
-        private string pname;
         private short ip;
         private short priority;
         private short state; // 0 - running, 1 - waiting, 2 - ready
@@ -25,10 +24,6 @@ namespace mod1_proc
             state = 0;
             processor_state = new short[4];
 
-        }
-        public string getPName()
-        {
-            return pname;
         }
         public short getPriority()
         {
@@ -62,6 +57,14 @@ namespace mod1_proc
         public void run()
         {
             state = 0;
+        }
+
+        public void printProcessorState()
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                Console.WriteLine("Rejestr: {0} Wartosc: {1}", i, processor_state[i]);
+            }
         }
 
         public void loadProcessorState()
