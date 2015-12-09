@@ -9,7 +9,6 @@ namespace mod1_proc
     class Scheduler
     {
         private LinkedList<Process>[] process_list;
-        private LinkedList<short> last_n;
         private SortedList<int, int> processes_waiting;
         private short current_priority;
         private short n;
@@ -18,7 +17,6 @@ namespace mod1_proc
         {
             Console.WriteLine("[PLANISTA] Inicjalizacja planisty.");
             n = 0;
-            last_n = new LinkedList<short>();
             process_list = new LinkedList<Process>[8];
             processes_waiting = new SortedList<int, int>();
             for( int i = 0; i < 8; i++)
@@ -47,15 +45,7 @@ namespace mod1_proc
             process_list[p.getPriority()].Remove(p);
             if(this.getHighestPriority() < current_priority)
             {
-                if (last_n.Count > 0)
-                {
-                    n = last_n.First();
-                    last_n.RemoveFirst();
-                }
-                else
-                {
                     n = 0;
-                }
             }
             Console.WriteLine("[PLANISTA] Usuniecie procesu {0}.", p.getPID());
 ;        }
@@ -105,7 +95,6 @@ namespace mod1_proc
             process_list[p.getPriority()].AddLast(p);
             if(this.getHighestPriority() > current_priority)
             {
-                last_n.AddLast(n);
                 n = 0;
                 current_priority = this.getHighestPriority();
             }
@@ -118,12 +107,15 @@ namespace mod1_proc
         {
             bool hunger = false;
             SortedList<int, int> proc_wait_copy = new SortedList<int, int>(this.processes_waiting);
-
-
+            if (this.current_priority < this.getHighestPriority())
+            {
+                n = 0;
+                current_priority = this.getHighestPriority();
+            }
             foreach (KeyValuePair<int, int> pair in proc_wait_copy)
             {
                 Process p = this.findProcess(pair.Key);
-                if (p.getPID() != this.getCurrentRunning().getPID() && p.getPriority() != this.current_priority && p.getPriority() != 0 && !process_list[4].Contains(p) && p.getState() != 1)
+                if ( p.getPriority() < 4 && p.getPID() != this.getCurrentRunning().getPID() && p.getPriority() != this.current_priority && p.getPriority() != 0 && !process_list[4].Contains(p) && p.getState() != 1 )
                 {
                    processes_waiting[pair.Key] =  pair.Value +1;
                     if(processes_waiting[pair.Key] > 10)
@@ -143,11 +135,10 @@ namespace mod1_proc
             }
             if (hunger)
             {
-                last_n.AddLast(n);
                 n = 0;
             }
             n++;
-            if(n >+ 3 || this.getCurrentRunning().getState() == 1)
+            if(n > 3 || this.getCurrentRunning().getState() == 1)
             {
                 moveQueue();
                 n = 1;
@@ -173,12 +164,8 @@ namespace mod1_proc
                     Console.WriteLine("[PLANISTA] Omijanie procesu w stanie waiting.");
                     process_list[process_list[current_priority].First().getPriority()].AddLast(process_list[current_priority].First());
                     process_list[current_priority].RemoveFirst();
-                    if (process_list[current_priority].Count() <= 0)
-                    {
-                        current_priority = this.getHighestPriority();
-                        n = last_n.First();
-                        last_n.RemoveFirst();
-                    }
+                    current_priority = this.getHighestPriority();
+                    n = 0;
                 }
             }
             else
@@ -187,12 +174,8 @@ namespace mod1_proc
                 process_list[current_priority].First().ready();
                 process_list[process_list[current_priority].First().getPriority()].AddLast(process_list[current_priority].First());
                 process_list[current_priority].RemoveFirst();
-                if (process_list[current_priority].Count() <= 0)
-                {
-                    current_priority = this.getHighestPriority();
-                    n = last_n.First();
-                    last_n.RemoveFirst();
-                }
+                current_priority = this.getHighestPriority();
+                n = 0;
             }
             process_list[current_priority].First().loadProcessorState();
         }
@@ -206,13 +189,19 @@ namespace mod1_proc
             {
                 if (process_list[i].Count() > 0)
                 {
-                    return i;
+                    foreach (Process p in process_list[i])
+                    {
+                        if(p.getState() == 2 || p.getState() == 0)
+                        {
+                            return i;
+                        }
+                    }     
                 }
             }
             return 0;
         }
 
-        // Deprecated: zrezygnowalem z tej wersji, zostawione jakbym jednak zmienil zdanie;
+        // Deprecated: 
         /*
         private void loadProcessList()
         {

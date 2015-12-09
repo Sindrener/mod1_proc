@@ -12,12 +12,12 @@ namespace mod1_proc
         {
             Processor proc = new Processor();
             Scheduler planista = new Scheduler();
-            Semafor sem = new Semafor(0);
+            Semafor sem = new Semafor(5);
             Interpreter inter = new Interpreter(ref planista, ref sem);
             String cmd;
             Process nadzorca = new Process(0, 0, 0, ref proc);
 
-            Process a = new Process(12, 120, 3, ref proc);
+            Process a = new Process(12, 120, 6, ref proc);
             a.ready();
             //   Process b = new Process(13, 10, 2, ref proc);
             Process c = new Process(18, 10, 2, ref proc);
@@ -36,7 +36,7 @@ namespace mod1_proc
             {
                 planista.nextTick();
                 inter.runProcess();
-                cmd = Console.ReadLine();
+                    cmd = Console.ReadLine();
             }
         }
     }

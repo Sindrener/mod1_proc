@@ -34,7 +34,7 @@ namespace mod1_proc
                 {
                     sem.op_p(ref p);
                 }
-                if(ip == 50)
+                if(ip%5 == 0)
                 {
                     sem.op_v();
                 }

@@ -43,8 +43,7 @@ namespace mod1_proc
         {
             if(queue.Count() <= 0)
             {
-                // semafor jest pusty;
-                // ogolnie to glupie bo sygnalizacja nie powinna zachodzic dla pustego semafora ? jakis error tutaj czy chuj wie co;
+               
             }
             else
             {
