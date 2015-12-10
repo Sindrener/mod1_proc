@@ -99,11 +99,13 @@ namespace mod1_proc
 
         public void addProcess(ref Process p)
         {
+
             processes_waiting.Add(p.getPID(), 0);
             process_list[p.getPriority()].AddLast(p);
             if(this.getHighestPriority() > current_priority)
             {
                 this.getCurrentRunning().saveProcessorState();
+                this.getCurrentRunning().ready();
                 n = 0;
                 current_priority = this.getHighestPriority();
                 this.getCurrentRunning().loadProcessorState();
@@ -115,6 +117,8 @@ namespace mod1_proc
 
         public void nextTick()
         {
+            this.getCurrentRunning().saveProcessorState();
+            this.getCurrentRunning().ready();
             bool hunger = false;
             SortedList<int, int> proc_wait_copy = new SortedList<int, int>(this.processes_waiting);
             if (this.current_priority < this.getHighestPriority())
@@ -133,6 +137,7 @@ namespace mod1_proc
                     if(processes_waiting[pair.Key] > 10)
                     {
                         
+
                         this.removeProcess(p);
                         process_list[4].AddLast(p);
                         if (this.getHighestPriority() > current_priority)
@@ -158,6 +163,7 @@ namespace mod1_proc
             Console.WriteLine("[PLANISTA] Wykonywanie nastepnego cyklu.");
             Console.WriteLine("[PLANISTA] Aktualnie wykonywany proces {0}, kwant czasu = {1}", this.getCurrentRunning().getPID(), n);
             this.getCurrentRunning().run();
+            this.getCurrentRunning().loadProcessorState();
         }
         public Process getCurrentRunning()
         {
