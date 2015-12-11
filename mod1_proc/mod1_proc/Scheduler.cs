@@ -23,7 +23,6 @@ namespace mod1_proc
             {
                 process_list[i] = new LinkedList<Process>();
             }
-            // dodanie procesu 0 
             current_priority = this.getHighestPriority();
             Console.WriteLine("[PLANISTA] Planista zainicjalizowany pomyslnie.)");
         }
@@ -118,7 +117,7 @@ namespace mod1_proc
         public void nextTick()
         {
             this.getCurrentRunning().saveProcessorState();
-            this.getCurrentRunning().ready();
+            
             bool hunger = false;
             SortedList<int, int> proc_wait_copy = new SortedList<int, int>(this.processes_waiting);
             if (this.current_priority < this.getHighestPriority())
@@ -134,24 +133,27 @@ namespace mod1_proc
                 if ( p.getPriority() < 4 && p.getPID() != this.getCurrentRunning().getPID() && p.getPriority() != this.current_priority && p.getPriority() != 0 && !process_list[4].Contains(p) && p.getState() != 1 )
                 {
                    processes_waiting[pair.Key] =  pair.Value +1;
-                    if(processes_waiting[pair.Key] > 10)
+                    if(processes_waiting[pair.Key] > 6)
                     {
-                        
+                        this.getCurrentRunning().ready();
 
                         this.removeProcess(p);
                         process_list[4].AddLast(p);
                         if (this.getHighestPriority() > current_priority)
                         {
+
                             hunger = true;
 
                             current_priority = this.getHighestPriority();
                         }
                         processes_waiting[pair.Key] = 0;
+                        this.getCurrentRunning().run();
                     }
                 }
             }
             if (hunger)
             {
+
                 n = 0;
             }
             n++;
@@ -162,8 +164,9 @@ namespace mod1_proc
             }
             Console.WriteLine("[PLANISTA] Wykonywanie nastepnego cyklu.");
             Console.WriteLine("[PLANISTA] Aktualnie wykonywany proces {0}, kwant czasu = {1}", this.getCurrentRunning().getPID(), n);
-            this.getCurrentRunning().run();
+            
             this.getCurrentRunning().loadProcessorState();
+            this.getCurrentRunning().run();
         }
         public Process getCurrentRunning()
         {
@@ -196,6 +199,7 @@ namespace mod1_proc
                 n = 0;
             }
             process_list[current_priority].First().loadProcessorState();
+            
         }
         public void updatePriority()
         {
@@ -218,20 +222,5 @@ namespace mod1_proc
             }
             return 0;
         }
-
-        // Deprecated: 
-        /*
-        private void loadProcessList()
-        {
-            foreach (LinkedList<Process> list in priority_list)
-            {
-                list.Clear();
-            }
-            foreach (Process process in process_list)
-            {
-                priority_list[process.getPriority()].AddLast(process);
-            }
-        }
-        */
     }
 }

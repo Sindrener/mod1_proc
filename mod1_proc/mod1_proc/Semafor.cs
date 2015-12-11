@@ -39,7 +39,7 @@ namespace mod1_proc
             s--;
         }
 
-        public void op_v()
+        public void op_v(Scheduler p)
         {
             if(queue.Count() <= 0)
             {
@@ -48,6 +48,7 @@ namespace mod1_proc
             else
             {
                 Console.WriteLine("[SEMAFOR] Operacja V uruchamianie procesu: {0}", queue.First().getPID());
+                p.getCurrentRunning().ready();
                 queue.First().ready();
                 queue.RemoveFirst();
             }

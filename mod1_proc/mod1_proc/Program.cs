@@ -75,30 +75,33 @@ namespace mod1_proc
                         int rempid = Convert.ToInt32(Console.ReadLine());
                         planista.removeProcess(rempid);
                         break;
-                    case "opr":
+                    case "opp":
+                        int oprpid;
                         Console.Write("Semafor (1-2): ");
-                        if(Console.ReadLine() == "sem1")
+                        String s = Console.ReadLine();
+                        if(s == "sem1")
                         {
                             Console.Write("PID: ");
-                            int oprpid = Convert.ToInt32(Console.ReadLine());
+                            oprpid = Convert.ToInt32(Console.ReadLine());
                             sem1.op_p(planista.findProcess(oprpid));
                         }
-                        else if(Console.ReadLine() == "sem2")
+                        else if(s == "sem2")
                         {
                             Console.Write("PID: ");
-                            int oprpid = Convert.ToInt32(Console.ReadLine());
+                            oprpid = Convert.ToInt32(Console.ReadLine());
                             sem2.op_p(planista.findProcess(oprpid));
                         }
                         break;
                     case "opv":
                         Console.Write("Semafor (1-2): ");
-                        if (Console.ReadLine() == "sem1")
+                        String s1 = Console.ReadLine();
+                        if ( s1 == "sem1")
                         {
-                            sem1.op_v();
+                            sem1.op_v(planista);
                         }
-                        else if (Console.ReadLine() == "sem2")
+                        else if (s1 == "sem2")
                         {
-                            sem2.op_v();
+                            sem2.op_v(planista);
                         }
                         break;
                     case "c":

@@ -16,8 +16,6 @@ namespace mod1_proc
         }
         public void runProcess()
         {
-            // Obsluga wykonywania rozkazu.
-            // Dla ulatwienia testowania kodu zmniejszalem IP (przy 0 konczenie pracy procesu) w normalnym przypadku IP powinno rosnac z kazda instrukcja (lub skakac, zaleznie od rozkazu (np call, jmp lub podobne) )
             if (planista.getCurrentRunning().getPriority() != 0)
             {
                 Process p = planista.getCurrentRunning();
